@@ -24,8 +24,8 @@ resource "yandex_cdn_resource" "main" {
 
   options {
     disable_cache              = var.disable_cache
-    edge_cache_settings        = var.edge_cache_settings > 0 ? var.edge_cache_settings: null
-    browser_cache_settings     = var.browser_cache_settings > 0 ? var.browser_cache_settings: null
+    edge_cache_settings        = var.edge_cache_settings > 0 ? var.edge_cache_settings : null
+    browser_cache_settings     = var.browser_cache_settings > 0 ? var.browser_cache_settings : null
     cache_http_headers         = var.cache_http_headers
     ignore_query_params        = var.ignore_query_params
     query_params_whitelist     = var.query_params_whitelist
@@ -46,7 +46,7 @@ resource "yandex_cdn_resource" "main" {
     custom_server_name         = var.custom_server_name
     ignore_cookie              = var.ignore_cookie
     secure_key                 = var.secure_key
-    enable_ip_url_signing      = var.secure_key !=null ? var.enable_ip_url_signing : null
+    enable_ip_url_signing      = var.secure_key != null ? var.enable_ip_url_signing : null
 
     dynamic "ip_address_acl" {
       for_each = var.ip_address_enabled ? [1] : []
@@ -67,5 +67,3 @@ resource "yandex_cdn_resource" "main" {
     yandex_dns_recordset.cdn_cm
   ]
 }
-
-

@@ -1,8 +1,3 @@
-locals {
-  cm_domains         = concat([var.cname], var.secondary_hostnames)
-  cm_challenge_count = length(local.cm_domains)
-}
-
 resource "yandex_cm_certificate" "cdn" {
   count = var.cm_issue_ssl_certificate ? 1 : 0
 

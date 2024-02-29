@@ -20,12 +20,12 @@ variable "cdns" {
       custom_host_header     = null
       forward_host_header    = false
       cors                   = ["*"]
-      allowed_http_methods   = [
+      allowed_http_methods = [
         "GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
       ]
       proxy_cache_methods_set    = true
       disable_proxy_force_ranges = false
-      static_request_headers     = {
+      static_request_headers = {
         is-from-cdn = "yes"
       }
       static_response_headers = {
@@ -39,7 +39,7 @@ variable "cdns" {
       ip_address_acl_excepted_values = []
       ip_address_acl_policy_type     = "allow"
       origin_group_use_next          = true
-      origin_group_origins           = {
+      origin_group_origins = {
         "main" = {
           enabled = true
           source  = "example.com:80"
