@@ -14,6 +14,22 @@ variable "folder_id" {
 }
 
 #
+# common
+#
+variable "common_name" {
+  description = <<EOF
+    Name which will be used for CDN resources like CM or CDN origin as prefix;
+    If it's empty, randomly generated name will be used
+  EOF
+  default = ""
+}
+variable "labels" {
+  description = "A set of labels that will be applied to all resources in this module."
+  type        = map(string)
+  default     = {}
+}
+
+#
 # CDN
 #
 variable "cname" {
@@ -48,39 +64,11 @@ variable "origin_protocol" {
   }
 }
 
-variable "issue_tls_" {}
-
-variable "ssl_certificate" {
-  default = {
-    type                   = "lets_encrypt_gcore"
-    certificate_manager_id = null
-  }
-
-  validation {
-    condition = (
-    var.ssl_certificate["type"] == "lets_encrypt_gcore" ||
-    var.ssl_certificate["type"] == "certificate_manager" ||
-    var.ssl_certificate["type"] == "not_used"
-    )
-    error_message = "Invalid value for ssl_certificate.type. Allowed values are 'lets_encrypt_gcore', 'not_used' or 'certificate_manager'."
-  }
-
-  validation {
-    condition = (
-    var.ssl_certificate["type"] == "certificate_manager" &&
-    var.ssl_certificate["certificate_manager_id"] != null
-    )
-    error_message = "Invalid value for ssl_certificate.certificate_manager_id. Please, specify valid ID of user certificate in Yandex Certificate Manager."
-  }
-}
-
 #
 # Options
 #
 variable "disable_cache" {
-  description = <<EOF
-    Setup a cache status.
-  EOF
+  description = "Setup a cache status."
   type        = bool
   default     = false
 }
@@ -91,9 +79,10 @@ variable "edge_cache_settings" {
     The value applies for a response with codes 200, 201, 204, 206, 301, 302, 303, 304, 307, 308
     if an origin server does not have caching HTTP headers.
     Responses with other codes will not be cached.
+    The default value is 345600.
   EOF
-  type        = number
-  default     = 0
+  type        = string
+  default     = "345600"
 }
 
 variable "browser_cache_settings" {
@@ -105,10 +94,10 @@ variable "browser_cache_settings" {
     The list of HTTP response codes that can be cached in browsers:
     200, 201, 204, 206, 301, 302, 303, 304, 307, 308.
     Other response codes will not be cached.
-    The default value is 4 days.
+    The default value is 0.
   EOF
   type        = string
-  default     = "4d"
+  default     = "0"
 }
 
 variable "cache_http_headers" {
@@ -173,7 +162,7 @@ variable "gzip_on" {
 }
 
 variable "redirect_http_to_https" {
-  description =<<EOF
+  description = <<EOF
     Parameter for redirecting clients from HTTP to HTTPS;
     possible values: 'true' or 'false'.
     Available when using an SSL certificate.
@@ -217,14 +206,6 @@ variable "cors" {
   default     = ["*"]
 }
 
-variable "stale" {
-  description = <<EOF
-    List of errors which instruct CDN servers to serve stale content to clients.
-  EOF
-  type        = list(string)
-  default     = []
-}
-
 variable "allowed_http_methods" {
   description = <<EOF
     HTTP methods for your CDN content.
@@ -240,8 +221,8 @@ variable "proxy_cache_methods_set" {
   description = <<EOF
     Allows caching for GET, HEAD and POST requests.
   EOF
-  type        = list(string)
-  default     = ["GET", "HEAD", "POST"]
+  type        = bool
+  default     = true
 }
 
 variable "disable_proxy_force_ranges" {
@@ -319,10 +300,13 @@ variable "ip_address_acl_policy_type" {
 #
 # CDN Origin
 #
-variable "origin_group_common_name" {
-  default = ""
-}
+
 variable "origin_group_use_next" {
+  description = <<EOF
+    If the option is active (has true value),
+    in case the origin responds with 4XX or 5XX codes, use the next origin from the list.
+  EOF
+  type = bool
   default = true
 }
 
@@ -332,11 +316,43 @@ variable "origin_group_origins" {
     source  = string
     backup  = optional(bool, false)
   }))
-  default = {
-    "main" = {
-      enabled = true
-      source  = "myhost:80"
-      backup  = false
-    }
-  }
+  default = {}
+}
+
+#
+# Certificate
+#
+variable "cdn_ssl_certificate_id" {
+  type        = string
+  description = "ID of user certificate in Yandex Certificate Manager."
+  default     = null
+}
+
+variable "cm_issue_ssl_certificate" {
+  type        = bool
+  description = "If true, Let's Encrypt certificate will be issued for cname"
+  default     = false
+}
+
+variable "cm_add_challenge_records" {
+  description = "If true, Certificate Manager challenge records will be created at dns_zone_id."
+  type        = bool
+  default     = false
+}
+
+#
+# DNS
+#
+variable "dns_zone_id" {
+  description = "ID of Yandex DNS zone, where certificate manager records will be created."
+  type        = string
+  default     = null
+}
+
+variable "dns_create_cname_records" {
+  default = false
+}
+
+variable "dns_create_secondary_records" {
+  default = false
 }
