@@ -1,5 +1,3 @@
-locals {}
-
 resource "yandex_cdn_origin_group" "main" {
   for_each = var.origin_group_origins
 
@@ -18,9 +16,9 @@ resource "yandex_cdn_resource" "main" {
   secondary_hostnames = var.secondary_hostnames
   active              = var.active
 
-  # TODO
-  folderId = ""
-  labels = {}
+
+  folder_id = local.folder_id
+  labels    = {}
 
   options {
     disable_cache          = true
@@ -64,16 +62,12 @@ resource "yandex_cdn_resource" "main" {
   }
 
   ssl_certificate {
-    type = "lets_encrypt_gcore"
-    data {
-      cm {
-        id = ""
-      }
-    }
+    type                   = "lets_encrypt_gcore"
+    certificate_manager_id = ""
   }
 
 
-  origin_protocol = "https"
+  origin_protocol = var.origin_protocol
 
   origin_group_id = yandex_cdn_origin_group.foo_cdn_group_by_id.id
 }

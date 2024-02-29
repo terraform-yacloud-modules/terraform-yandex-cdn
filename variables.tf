@@ -1,34 +1,76 @@
 #
+# yandex cloud coordinates
+#
+variable "folder_id" {
+  description = <<EOF
+    (Optional) The ID of the Yandex Cloud Folder that the resources belongs to.
+
+    Allows to create bucket in different folder.
+    It will try to create bucket using IAM-token in provider config, not using access_key.
+    If omitted, folder_id specified in provider config and access_key is used.
+  EOF
+  type        = string
+  default     = null
+}
+
+#
 # CDN
 #
 variable "cname" {
   type        = string
-  description = "CDN endpoint CNAME, must be unique among resources"
+  description = "Primary domain name for content distribution."
 }
 
 variable "secondary_hostnames" {
-  type = list(string)
-
-  default = []
+  type        = list(string)
+  description = "Additional domain names for content distribution."
+  default     = []
 }
 
 variable "active" {
   type        = bool
-  description = "Flag to create Resource either in active or disabled state. True - the content from CDN is available to clients"
+  description = <<EOF
+    End user access to content is indicated by the following flag:
+    true - indicates that CDN content is available to clients;
+    false - indicates that content access is disabled.
+  EOF
   default     = true
 }
 
+variable "origin_protocol" {
+  type        = string
+  description = "Origin protocol for sources"
+  default     = "http"
+
+  validation {
+    condition     = (var.origin_protocol == "http" || var.origin_protocol == "https")
+    error_message = "Invalid value for origin_protocol.type. Allowed values are 'http' or 'https'."
+  }
+}
+
+variable "issue_tls_" {}
+
 variable "ssl_certificate" {
   default = {
-    type = "lets_encrypt_gcore"
+    type                   = "lets_encrypt_gcore"
+    certificate_manager_id = null
   }
 
   validation {
     condition = (
     var.ssl_certificate["type"] == "lets_encrypt_gcore" ||
-    var.ssl_certificate["type"] == "certificate_manager"
+    var.ssl_certificate["type"] == "certificate_manager" ||
+    var.ssl_certificate["type"] == "not_used"
     )
-    error_message = "Invalid value for ssl_certificate.type. Allowed values are 'lets_encrypt_gcore' or 'certificate_manager'."
+    error_message = "Invalid value for ssl_certificate.type. Allowed values are 'lets_encrypt_gcore', 'not_used' or 'certificate_manager'."
+  }
+
+  validation {
+    condition = (
+    var.ssl_certificate["type"] == "certificate_manager" &&
+    var.ssl_certificate["certificate_manager_id"] != null
+    )
+    error_message = "Invalid value for ssl_certificate.certificate_manager_id. Please, specify valid ID of user certificate in Yandex Certificate Manager."
   }
 }
 
@@ -39,8 +81,8 @@ variable "disable_cache" {
   description = <<EOF
     Setup a cache status.
   EOF
-  type    = bool
-  default = true
+  type        = bool
+  default     = false
 }
 
 variable "edge_cache_settings" {
@@ -50,8 +92,8 @@ variable "edge_cache_settings" {
     if an origin server does not have caching HTTP headers.
     Responses with other codes will not be cached.
   EOF
-  type    = number
-  default = 0
+  type        = number
+  default     = 0
 }
 
 variable "browser_cache_settings" {
@@ -65,16 +107,14 @@ variable "browser_cache_settings" {
     Other response codes will not be cached.
     The default value is 4 days.
   EOF
-  type    = string
-  default = "4d"
+  type        = string
+  default     = "4d"
 }
 
 variable "cache_http_headers" {
-  description = <<EOF
-    List of HTTP headers that must be included in responses to clients.
-  EOF
-  type    = list(string)
-  default = []
+  description = "List of HTTP headers that must be included in responses to clients."
+  type        = list(string)
+  default     = []
 }
 
 variable "ignore_query_params" {
@@ -82,8 +122,8 @@ variable "ignore_query_params" {
     Files with different query parameters are cached as objects with the same key
     regardless of the parameter value. Selected by default.
   EOF
-  type    = bool
-  default = true
+  type        = bool
+  default     = false
 }
 
 variable "query_params_whitelist" {
@@ -91,8 +131,8 @@ variable "query_params_whitelist" {
     Files with the specified query parameters are cached as objects with different keys,
     files with other parameters are cached as objects with the same key.
   EOF
-  type    = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "query_params_blacklist" {
@@ -100,8 +140,8 @@ variable "query_params_blacklist" {
     Files with the specified query parameters are cached as objects with the same key,
     files with other parameters are cached as objects with different keys.
   EOF
-  type    = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "slice" {
@@ -110,8 +150,8 @@ variable "slice" {
     (no larger than 10 MB each part). It reduces time to first byte.
     The origin must support HTTP Range requests.
   EOF
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "fetched_compressed" {
@@ -120,41 +160,42 @@ variable "fetched_compressed" {
     Also, content delivery speed becomes higher because of reducing the time
     for compressing files in a CDN.
   EOF
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "gzip_on" {
   description = <<EOF
     GZip compression at CDN servers reduces file size by 70% and can be as high as 90%.
   EOF
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "redirect_http_to_https" {
-  description = <<EOF
-    Set up a redirect from HTTP to HTTPS.
+  description =<<EOF
+    Parameter for redirecting clients from HTTP to HTTPS;
+    possible values: 'true' or 'false'.
+    Available when using an SSL certificate.
   EOF
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "redirect_https_to_http" {
-  description = <<EOF
-    Set up a redirect from HTTPS to HTTP.
-  EOF
-  type    = bool
-  default = true
+  description = "Set up a redirect from HTTPS to HTTP."
+  type        = bool
+  default     = false
 }
 
 variable "custom_host_header" {
   description = <<EOF
     Custom value for the Host header.
     Your server must be able to process requests with the chosen header.
+    E.g.: "ycprojektblue-storage.storage.yandexcloud.net"
   EOF
-  type    = string
-  default = ""
+  type        = string
+  default     = null
 }
 
 variable "forward_host_header" {
@@ -163,8 +204,8 @@ variable "forward_host_header" {
     to send in the request to the Origin the same Host header
     as was sent in the request to CDN server.
   EOF
-  type    = bool
-  default = false
+  type        = bool
+  default     = true
 }
 
 variable "cors" {
@@ -172,16 +213,16 @@ variable "cors" {
     Parameter that lets browsers get access to selected resources
     from a domain different to a domain from which the request is received.
   EOF
-  type    = map(string)
-  default = {}
+  type        = list(string)
+  default     = ["*"]
 }
 
 variable "stale" {
   description = <<EOF
     List of errors which instruct CDN servers to serve stale content to clients.
   EOF
-  type    = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "allowed_http_methods" {
@@ -191,40 +232,34 @@ variable "allowed_http_methods" {
     In case some methods are not allowed to the user, they will get the 405 (Method Not Allowed) response.
     If the method is not supported, the user gets the 501 (Not Implemented) response.
   EOF
-  type    = string
-  default = "GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS"
+  type        = list(string)
+  default     = ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 }
 
 variable "proxy_cache_methods_set" {
   description = <<EOF
     Allows caching for GET, HEAD and POST requests.
   EOF
-  type    = string
-  default = "GET,HEAD,POST"
+  type        = list(string)
+  default     = ["GET", "HEAD", "POST"]
 }
 
 variable "disable_proxy_force_ranges" {
-  description = <<EOF
-    Disabling proxy force ranges.
-  EOF
-  type    = bool
-  default = false
+  description = "Disabling proxy force ranges."
+  type        = bool
+  default     = false
 }
 
 variable "static_request_headers" {
-  description = <<EOF
-    Set up custom headers that CDN servers will send in requests to origins.
-  EOF
-  type    = map(string)
-  default = {}
+  description = "Set up custom headers that CDN servers will send in requests to origins."
+  type        = map(string)
+  default     = {}
 }
 
 variable "static_response_headers" {
-  description = <<EOF
-    Set up custom headers that CDN servers will send in response to clients.
-  EOF
-  type    = map(string)
-  default = {}
+  description = "Set up custom headers that CDN servers will send in response to clients."
+  type        = map(string)
+  default     = {}
 }
 
 variable "custom_server_name" {
@@ -234,34 +269,32 @@ variable "custom_server_name" {
     you can use your own certificate for content delivery via HTTPS.
     Read-only.
   EOF
-  type    = string
-  default = ""
+  type        = string
+  default     = null
 }
 
 variable "ignore_cookie" {
-  description = <<EOF
-    Set for ignoring cookie.
-  EOF
-  type    = bool
-  default = false
+  description = "Set for ignoring cookie."
+  type        = bool
+  default     = true
 }
 
 variable "secure_key" {
   description = <<EOF
-    Set secure key for URL encoding to protect content and limit access
-    by IP addresses and time limits.
+    The secret key. An arbitrary string from 6 to 32 characters long.
+    Required to clarify access to a resource using secure tokens
   EOF
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "enable_ip_url_signing" {
   description = <<EOF
-    Enable access limiting by IP addresses.
+    Optional parameter for restricting access to a CDN resource by IP address using protected tokens.
     This option is available only with setting secure_key.
   EOF
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "ip_address_acl_excepted_values" {
@@ -269,8 +302,8 @@ variable "ip_address_acl_excepted_values" {
     The list of specified IP addresses to be allowed or denied
     depending on acl policy type.
   EOF
-  type    = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "ip_address_acl_policy_type" {
@@ -278,8 +311,8 @@ variable "ip_address_acl_policy_type" {
     The policy type for ip_address_acl option,
     one of "allow" or "deny" values.
   EOF
-  type    = string
-  default = "allow"
+  type        = string
+  default     = "allow"
 }
 
 
