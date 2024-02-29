@@ -1,7 +1,7 @@
 # Yandex Cloud <RESOURCE> Terraform module
 
-https://github.com/yandex-cloud/docs/tree/master/ru/cdn
-# at this moment we support only hostnames from one zone
+
+
 
 Terraform module which creates Yandex Cloud <RESOURCE> resources.
 

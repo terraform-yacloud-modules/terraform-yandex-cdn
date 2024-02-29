@@ -9,6 +9,8 @@
 
 # terraform lockfile
 .terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
 
 # Crash log files
 crash.log

@@ -16,13 +16,6 @@ variable "folder_id" {
 #
 # common
 #
-variable "common_name" {
-  description = <<EOF
-    Name which will be used for CDN resources like CM or CDN origin as prefix;
-    If it's empty, randomly generated name will be used
-  EOF
-  default = ""
-}
 variable "labels" {
   description = "A set of labels that will be applied to all resources in this module."
   type        = map(string)
@@ -165,7 +158,7 @@ variable "redirect_http_to_https" {
   description = <<EOF
     Parameter for redirecting clients from HTTP to HTTPS;
     possible values: 'true' or 'false'.
-    Available when using an SSL certificate.
+    Available when using an SSL certificate, otherwise will be set as false.
   EOF
   type        = bool
   default     = true
@@ -266,14 +259,22 @@ variable "secure_key" {
     Required to clarify access to a resource using secure tokens
   EOF
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "enable_ip_url_signing" {
   description = <<EOF
-    Optional parameter for restricting access to a CDN resource by IP address using protected tokens.
-    This option is available only with setting secure_key.
+    Optional parameter, `true` or `false`.
+    It restricts access to a CDN resource based on IP.
+    A trusted IP address is specified as a parameter outside a CDN resource when generating an [MD5](https://en.wikipedia.org/wiki/MD5) hash for a signed link.
+    If the parameter is not set, file access will be allowed from any IP.
   EOF
+  type        = bool
+  default     = false
+}
+
+variable "ip_address_enabled" {
+  description = "If true, IP Address ACL will be enabled"
   type        = bool
   default     = false
 }
@@ -306,8 +307,8 @@ variable "origin_group_use_next" {
     If the option is active (has true value),
     in case the origin responds with 4XX or 5XX codes, use the next origin from the list.
   EOF
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "origin_group_origins" {
@@ -349,10 +350,11 @@ variable "dns_zone_id" {
   default     = null
 }
 
-variable "dns_create_cname_records" {
-  default = false
-}
-
-variable "dns_create_secondary_records" {
-  default = false
-}
+# TODO: At this moment it's not possible to add it to CloudDNS, because CDN resource does not return endpoint in the format cl-....edgecdn.ru
+#variable "dns_create_cname_records" {
+#  default = false
+#}
+#
+#variable "dns_create_secondary_records" {
+#  default = false
+#}

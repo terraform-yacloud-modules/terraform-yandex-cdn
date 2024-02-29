@@ -1,14 +1,13 @@
 variable "cdns" {
   default = {
-    "frontend" = {
-      common_name            = "mycdnprefix"
-      cname                  = "cdn.test-yandex.techeventic.ru"
+    "example1" = {
+      cname                  = "cdn.test-yandex.example.ru"
       secondary_hostnames    = []
       active                 = true
       origin_protocol        = "https"
-      disable_cache          = false
-      edge_cache_settings    = "345600"
-      browser_cache_settings = "1800"
+      disable_cache          = true
+      edge_cache_settings    = "0"
+      browser_cache_settings = "0"
       cache_http_headers     = []
       ignore_query_params    = false
       query_params_whitelist = []
@@ -19,7 +18,7 @@ variable "cdns" {
       redirect_http_to_https = true
       redirect_https_to_http = false
       custom_host_header     = null
-      forward_host_header    = true
+      forward_host_header    = false
       cors                   = ["*"]
       allowed_http_methods   = [
         "GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
@@ -33,19 +32,25 @@ variable "cdns" {
         is-cdn = "yes"
       }
       custom_server_name             = null
-      ignore_cookie                  = true
+      ignore_cookie                  = false
       secure_key                     = null
       enable_ip_url_signing          = false
+      ip_address_enabled             = false
       ip_address_acl_excepted_values = []
       ip_address_acl_policy_type     = "allow"
       origin_group_use_next          = true
       origin_group_origins           = {
         "main" = {
           enabled = true
-          source  = "myhost:80"
+          source  = "example.com:80"
           backup  = false
         }
       }
+
+      cdn_ssl_certificate_id   = null
+      cm_issue_ssl_certificate = true
+      cm_add_challenge_records = true
+      dns_zone_id              = "dns8sr5o47m1hsdfrh69"
     }
   }
 }
@@ -56,7 +61,6 @@ module "cdn" {
 
   source = "../../"
 
-  common_name                    = each.key
   cname                          = each.value["cname"]
   secondary_hostnames            = each.value["secondary_hostnames"]
   active                         = each.value["active"]
@@ -85,8 +89,13 @@ module "cdn" {
   ignore_cookie                  = each.value["ignore_cookie"]
   secure_key                     = each.value["secure_key"]
   enable_ip_url_signing          = each.value["enable_ip_url_signing"]
+  ip_address_enabled             = each.value["ip_address_enabled"]
   ip_address_acl_excepted_values = each.value["ip_address_acl_excepted_values"]
   ip_address_acl_policy_type     = each.value["ip_address_acl_policy_type"]
   origin_group_use_next          = each.value["origin_group_use_next"]
   origin_group_origins           = each.value["origin_group_origins"]
+  cdn_ssl_certificate_id         = each.value["cdn_ssl_certificate_id"]
+  cm_issue_ssl_certificate       = each.value["cm_issue_ssl_certificate"]
+  cm_add_challenge_records       = each.value["cm_add_challenge_records"]
+  dns_zone_id                    = each.value["dns_zone_id"]
 }
