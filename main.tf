@@ -1,5 +1,5 @@
 resource "yandex_cdn_origin_group" "main" {
-  name     = format("main-%s", var.cname)
+  name     = replace(var.cname, ".", "-")
   use_next = var.origin_group_use_next
 
   dynamic "origin" {
