@@ -14,7 +14,7 @@ resource "yandex_cm_certificate" "cdn" {
 }
 
 resource "yandex_dns_recordset" "cdn_cm" {
-  count   = var.cm_add_challenge_records && var.cm_issue_ssl_certificate ? local.cm_challenge_count : 0
+  count   = var.cm_add_challenge_records && var.cm_issue_ssl_certificate && var.dns_zone_id != null ? local.cm_challenge_count : 0
   zone_id = var.dns_zone_id
   name    = yandex_cm_certificate.cdn[0].challenges[count.index].dns_name
   type    = yandex_cm_certificate.cdn[0].challenges[count.index].dns_type
