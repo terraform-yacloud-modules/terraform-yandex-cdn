@@ -312,6 +312,25 @@ variable "origin_group_use_next" {
 }
 
 variable "origin_group_origins" {
+  description = <<EOF
+    A map of objects representing the origins for the CDN origin group. Each object contains the following fields:
+    - enabled (optional, default: true): A boolean indicating whether the origin is enabled and used as a source for the CDN.
+    - source (required): The IP address or domain name of your origin and the port.
+    - backup (optional, default: false): A boolean specifying whether the origin is used in its origin group as a backup. A backup origin is used when one of the active origins becomes unavailable.
+
+    Example:
+    {
+      origin1 = {
+        source = "192.168.1.1:8080"
+        backup = false
+      }
+      origin2 = {
+        source  = "example.com"
+        enabled = true
+        backup  = true
+      }
+    }
+  EOF
   type = map(object({
     enabled = optional(bool, true)
     source  = string
