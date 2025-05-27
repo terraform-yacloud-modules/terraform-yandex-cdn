@@ -20,6 +20,19 @@ module "cdn" {
     "Cache-Control",
     "ETag"
   ]
+
+  # Параметры запросов
+  ignore_query_params = false
+  query_params_whitelist = [
+    "utm_source",
+    "utm_medium",
+    "version"
+  ]
+  query_params_blacklist = [
+    "session_id",
+    "user_token"
+  ]
+
   origin_group_origins = {
     "main" = {
       enabled = true
