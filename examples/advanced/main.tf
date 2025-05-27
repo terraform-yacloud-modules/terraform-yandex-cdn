@@ -57,6 +57,14 @@ module "cdn" {
     "X-Cache-Status"   = "HIT"
   }
 
+  # Дополнительные настройки
+  custom_server_name = "*.example.com"  # Wildcard CNAME
+  ignore_cookie = false                 # Учитывать cookies в кэше
+
+
+  ip_address_acl_policy_type = "allow"  # allow или deny
+
+
   origin_group_origins = {
     "main" = {
       enabled = true
