@@ -2,14 +2,14 @@ module "cdn" {
   source = "../../"
 
   cname = "cdn2.test-yandex.example.ru"
-  secondary_hostnames = [    # Дополнительные домены
+  secondary_hostnames = [
     "assets.test-yandex.example.ru",
     "static.test-yandex.example.ru"
   ]
-  active = true  # CDN активен и доступен клиентам
+  active = true
 
   # Протокол для origin серверов
-  origin_protocol = "http"  # http или https
+  origin_protocol = "http"
 
   # Настройки кэширования
   disable_cache = false
@@ -38,7 +38,7 @@ module "cdn" {
   redirect_https_to_http = false
 
   # Заголовки
-  custom_host_header = "origin.example.com"  # Кастомный Host заголовок для origin
+  custom_host_header = "origin.example.com"
   forward_host_header = false                # Пересылать оригинальный Host заголовок
 
   # HTTP методы
@@ -61,9 +61,7 @@ module "cdn" {
   custom_server_name = "*.example.com"  # Wildcard CNAME
   ignore_cookie = false                 # Учитывать cookies в кэше
 
-
-  ip_address_acl_policy_type = "allow"  # allow или deny
-
+  ip_address_acl_policy_type = "allow"
 
   origin_group_origins = {
     "main" = {
