@@ -33,6 +33,14 @@ module "cdn" {
     "user_token"
   ]
 
+  # HTTPS редиректы
+  redirect_http_to_https = true
+  redirect_https_to_http = false
+
+  # Заголовки
+  custom_host_header = "origin.example.com"  # Кастомный Host заголовок для origin
+  forward_host_header = false                # Пересылать оригинальный Host заголовок
+
   origin_group_origins = {
     "main" = {
       enabled = true
