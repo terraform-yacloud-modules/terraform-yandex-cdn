@@ -41,6 +41,22 @@ module "cdn" {
   custom_host_header = "origin.example.com"  # Кастомный Host заголовок для origin
   forward_host_header = false                # Пересылать оригинальный Host заголовок
 
+  # HTTP методы
+  allowed_http_methods = ["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"]
+  proxy_cache_methods_set = true
+  disable_proxy_force_ranges = false
+
+  # Кастомные заголовки
+  static_request_headers = {
+    "X-Forwarded-Proto" = "https"
+    "X-CDN-Provider"    = "yandex"
+  }
+
+  static_response_headers = {
+    "X-Content-Source" = "yandex-cdn"
+    "X-Cache-Status"   = "HIT"
+  }
+
   origin_group_origins = {
     "main" = {
       enabled = true
