@@ -1,27 +1,25 @@
 module "cdn" {
   source = "../../"
 
-  cname = "cdn.test-yandex.example.ru"
+  cname                    = "cdn.test-yandex.example.ru"
   secondary_hostnames    = []
-  active = true
-
-  # Протокол для origin серверов
-  origin_protocol = "http"
-  # Настройки кэширования
-  disable_cache          = false
+  active                 = true
+  origin_protocol        = "http"
+  disable_cache          = true
   edge_cache_settings    = "0"
-  # Параметры заголовков и запросов
+  browser_cache_settings = "0"
   cache_http_headers     = []
   ignore_query_params    = false
+  query_params_whitelist = []
   query_params_blacklist = []
   slice                  = false
   fetched_compressed     = false
   gzip_on                = true
   redirect_http_to_https = false
   redirect_https_to_http = false
-  custom_host_header  = null
-  forward_host_header = false
-  cors                = ["*"]
+  custom_host_header     = null
+  forward_host_header    = false
+  cors                   = ["*"]
   allowed_http_methods = [
     "GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
   ]
@@ -33,14 +31,14 @@ module "cdn" {
   static_response_headers = {
     is-cdn = "yes"
   }
-  custom_server_name = null
-  ignore_cookie         = false
-  secure_key            = null
-  enable_ip_url_signing = false
+  custom_server_name             = null
+  ignore_cookie                  = false
+  secure_key                     = null
+  enable_ip_url_signing          = false
   ip_address_enabled             = false
   ip_address_acl_excepted_values = []
   ip_address_acl_policy_type     = "allow"
-  origin_group_use_next = true
+  origin_group_use_next          = true
   origin_group_origins = {
     "main" = {
       enabled = true
@@ -48,11 +46,10 @@ module "cdn" {
       backup  = false
     }
   }
+
   cdn_ssl_certificate_id   = null
   cm_issue_ssl_certificate = false
   cm_add_challenge_records = false
   dns_zone_id              = "dns8sr5o47m1hsdfrh69"
-  query_params_whitelist = []
-  browser_cache_settings = "0"
 
 }
