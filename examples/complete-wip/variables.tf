@@ -4,7 +4,7 @@ variable "cdns" {
       cname                  = "cdn.test-yandex.example.ru"
       secondary_hostnames    = []
       active                 = true
-      origin_protocol        = "https"
+      origin_protocol        = "http"
       disable_cache          = true
       edge_cache_settings    = "0"
       browser_cache_settings = "0"
@@ -15,7 +15,7 @@ variable "cdns" {
       slice                  = false
       fetched_compressed     = false
       gzip_on                = true
-      redirect_http_to_https = true
+      redirect_http_to_https = false
       redirect_https_to_http = false
       custom_host_header     = null
       forward_host_header    = false
@@ -48,8 +48,8 @@ variable "cdns" {
       }
 
       cdn_ssl_certificate_id   = null
-      cm_issue_ssl_certificate = true
-      cm_add_challenge_records = true
+      cm_issue_ssl_certificate = false
+      cm_add_challenge_records = false
       dns_zone_id              = "dns8sr5o47m1hsdfrh69"
     }
   }
