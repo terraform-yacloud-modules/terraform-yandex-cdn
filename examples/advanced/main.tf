@@ -12,9 +12,9 @@ module "cdn" {
   origin_protocol = "http"
 
   # Настройки кэширования
-  disable_cache = false
-  edge_cache_settings = "86400"      # 24 часа в секундах
-  browser_cache_settings = "3600"    # 1 час в секундах
+  disable_cache          = false
+  edge_cache_settings    = "86400" # 24 часа в секундах
+  browser_cache_settings = "3600"  # 1 час в секундах
   cache_http_headers = [
     "Content-Type",
     "Cache-Control",
@@ -38,12 +38,12 @@ module "cdn" {
   redirect_https_to_http = false
 
   # Заголовки
-  custom_host_header = "origin.example.com"
-  forward_host_header = false                # Пересылать оригинальный Host заголовок
+  custom_host_header  = "origin.example.com"
+  forward_host_header = false # Пересылать оригинальный Host заголовок
 
   # HTTP методы
-  allowed_http_methods = ["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"]
-  proxy_cache_methods_set = true
+  allowed_http_methods       = ["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"]
+  proxy_cache_methods_set    = true
   disable_proxy_force_ranges = false
 
   # Кастомные заголовки
@@ -58,8 +58,8 @@ module "cdn" {
   }
 
   # Дополнительные настройки
-  custom_server_name = "*.example.com"  # Wildcard CNAME
-  ignore_cookie = false                 # Учитывать cookies в кэше
+  custom_server_name = "*.example.com" # Wildcard CNAME
+  ignore_cookie      = false           # Учитывать cookies в кэше
 
   ip_address_acl_policy_type = "allow"
 

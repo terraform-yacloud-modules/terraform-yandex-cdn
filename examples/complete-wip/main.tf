@@ -1,7 +1,7 @@
 module "cdn" {
   source = "../../"
 
-  cname                    = "cdn.test-yandex.example.ru"
+  cname                  = "cdn.test-yandex.example.ru"
   secondary_hostnames    = []
   active                 = true
   origin_protocol        = "http"
