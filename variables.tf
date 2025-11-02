@@ -28,12 +28,25 @@ variable "labels" {
 variable "cname" {
   type        = string
   description = "Primary domain name for content distribution."
+
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9][a-zA-Z0-9.-]{1,61}[a-zA-Z0-9]\\.[a-zA-Z]{2,}$", var.cname))
+    error_message = "Invalid domain name format. Must be a valid FQDN."
+  }
 }
 
 variable "secondary_hostnames" {
   type        = list(string)
   description = "Additional domain names for content distribution."
   default     = []
+
+  validation {
+    condition = alltrue([
+      for hostname in var.secondary_hostnames :
+      can(regex("^[a-zA-Z0-9][a-zA-Z0-9.-]{1,61}[a-zA-Z0-9]\\.[a-zA-Z]{2,}$", hostname))
+    ])
+    error_message = "Invalid domain name format in secondary_hostnames. All values must be valid FQDNs."
+  }
 }
 
 variable "active" {
@@ -76,6 +89,11 @@ variable "edge_cache_settings" {
   EOF
   type        = string
   default     = "345600"
+
+  validation {
+    condition     = can(regex("^[0-9]+$", var.edge_cache_settings))
+    error_message = "edge_cache_settings must be a numeric string containing only digits."
+  }
 }
 
 variable "browser_cache_settings" {
@@ -91,6 +109,11 @@ variable "browser_cache_settings" {
   EOF
   type        = string
   default     = "0"
+
+  validation {
+    condition     = can(regex("^[0-9]+$", var.browser_cache_settings))
+    error_message = "browser_cache_settings must be a numeric string containing only digits."
+  }
 }
 
 variable "cache_http_headers" {
@@ -286,6 +309,24 @@ variable "ip_address_acl_excepted_values" {
   EOF
   type        = list(string)
   default     = []
+
+  validation {
+    condition = alltrue([
+      for ip in var.ip_address_acl_excepted_values :
+      can(regex("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$", ip)) ||
+      can(regex("^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$", ip)) ||
+      can(regex("^::([0-9a-fA-F]{1,4}:){0,6}[0-9a-fA-F]{1,4}$", ip)) ||
+      can(regex("^([0-9a-fA-F]{1,4}:){1,7}:$", ip)) ||
+      can(regex("^([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}$", ip)) ||
+      can(regex("^([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}$", ip)) ||
+      can(regex("^([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}$", ip)) ||
+      can(regex("^([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}$", ip)) ||
+      can(regex("^([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}$", ip)) ||
+      can(regex("^[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})$", ip)) ||
+      can(regex("^:((:[0-9a-fA-F]{1,4}){1,7}|:)$", ip))
+    ])
+    error_message = "Invalid IP address format. Must be a valid IPv4 or IPv6 address."
+  }
 }
 
 variable "ip_address_acl_policy_type" {
@@ -295,6 +336,11 @@ variable "ip_address_acl_policy_type" {
   EOF
   type        = string
   default     = "allow"
+
+  validation {
+    condition     = contains(["allow", "deny"], var.ip_address_acl_policy_type)
+    error_message = "ip_address_acl_policy_type must be either 'allow' or 'deny'."
+  }
 }
 
 
@@ -325,7 +371,7 @@ variable "origin_group_origins" {
         backup = false
       }
       origin2 = {
-        source  = "example.com"
+        source  = "example.com:80"
         enabled = true
         backup  = true
       }
@@ -337,6 +383,14 @@ variable "origin_group_origins" {
     backup  = optional(bool, false)
   }))
   default = {}
+
+  validation {
+    condition = alltrue([
+      for origin_key, origin in var.origin_group_origins :
+      can(regex("^([a-zA-Z0-9][a-zA-Z0-9.-]{1,61}[a-zA-Z0-9]\\.[a-zA-Z]{2,}|(?:[0-9]{1,3}\\.){3}[0-9]{1,3}|localhost):[0-9]{1,5}$", origin.source))
+    ])
+    error_message = "Invalid origin source format. Must be in format 'domain.com:port' or 'ip:port' with valid port number (1-65535)."
+  }
 }
 
 #
