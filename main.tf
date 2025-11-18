@@ -18,6 +18,8 @@ resource "yandex_cdn_resource" "main" {
   secondary_hostnames = var.secondary_hostnames
   active              = var.active
 
+  provider_type = var.provider_type
+
   origin_protocol = var.origin_protocol
   origin_group_id = yandex_cdn_origin_group.main.id
 

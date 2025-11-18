@@ -59,6 +59,14 @@ variable "active" {
   default     = true
 }
 
+variable "provider_type" {
+  type        = string
+  description = <<EOF
+    CDN provider is a content delivery service provider. Possible values: "ourcdn" (default) or "gcore"
+  EOF
+  default     = "ourcdn"
+}
+
 variable "origin_protocol" {
   type        = string
   description = "Origin protocol for sources"
