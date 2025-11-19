@@ -26,14 +26,24 @@ resource "yandex_cdn_resource" "main" {
   folder_id = local.folder_id
 
   options {
-    disable_cache              = var.disable_cache
-    edge_cache_settings        = var.edge_cache_settings > 0 ? var.edge_cache_settings : null
+    disable_cache       = var.disable_cache
+    edge_cache_settings = var.edge_cache_settings > 0 ? var.edge_cache_settings : null
+
+    dynamic "edge_cache_settings_codes" {
+      for_each = var.edge_cache_settings_codes_enabled ? [1] : []
+      content {
+        custom_values = var.edge_cache_settings_custom_values
+        value         = var.edge_cache_settings_value
+      }
+    }
+
     browser_cache_settings     = var.browser_cache_settings > 0 ? var.browser_cache_settings : null
     cache_http_headers         = var.cache_http_headers
     ignore_query_params        = var.ignore_query_params
     query_params_whitelist     = var.query_params_whitelist
     query_params_blacklist     = var.query_params_blacklist
     slice                      = var.slice
+    stale                      = var.stale
     fetched_compressed         = var.fetched_compressed
     gzip_on                    = var.gzip_on
     redirect_http_to_https     = var.cdn_ssl_certificate_id != null || var.cm_issue_ssl_certificate ? var.redirect_http_to_https : false

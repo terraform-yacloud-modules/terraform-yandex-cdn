@@ -104,6 +104,22 @@ variable "edge_cache_settings" {
   }
 }
 
+variable "edge_cache_settings_codes_enabled" {
+  description = "If true, edge cache settings will be enabled"
+  type        = bool
+  default     = false
+}
+
+variable "edge_cache_settings_custom_values" {
+  type    = map(string)
+  default = {}
+}
+
+variable "edge_cache_settings_value" {
+  type    = string
+  default = "345600"
+}
+
 variable "browser_cache_settings" {
   description = <<EOF
     Set up a cache period for the end-users browser.
@@ -165,6 +181,14 @@ variable "slice" {
   EOF
   type        = bool
   default     = false
+}
+
+variable "stale" {
+  description = <<EOF
+    List of errors which instruct CDN servers to serve stale content to clients. Possible values: error, http_403, http_404, http_429, http_500, http_502, http_503, http_504, invalid_header, timeout, updating.
+  EOF
+  type        = list(string)
+  default     = []
 }
 
 variable "fetched_compressed" {
