@@ -27,7 +27,7 @@ resource "yandex_cdn_resource" "main" {
 
   options {
     disable_cache       = var.disable_cache
-    edge_cache_settings = var.edge_cache_settings > 0 ? var.edge_cache_settings : null
+    edge_cache_settings = var.edge_cache_settings > 0 && !var.edge_cache_settings_codes_enabled ? var.edge_cache_settings : null
 
     dynamic "edge_cache_settings_codes" {
       for_each = var.edge_cache_settings_codes_enabled ? [1] : []
