@@ -1,7 +1,8 @@
 resource "yandex_cdn_origin_group" "main" {
-  name      = replace(var.cname, ".", "-")
-  use_next  = var.origin_group_use_next
-  folder_id = local.folder_id
+  name          = replace(var.cname, ".", "-")
+  use_next      = var.origin_group_use_next
+  folder_id     = local.folder_id
+  provider_type = var.provider_type
 
   dynamic "origin" {
     for_each = var.origin_group_origins
