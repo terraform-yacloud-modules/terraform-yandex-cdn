@@ -6,11 +6,11 @@ module "cdn" {
     "assets.test-yandex.example.ru",
     "static.test-yandex.example.ru"
   ]
-  active = true
+  active        = true
   provider_type = "ourcdn"
   # Защита CDN
-  shielding = "1"  # ID локации для защиты (опционально)
-  
+  shielding = "1" # ID локации для защиты (опционально)
+
   labels = {
     environment = "production"
     service     = "cdn"
@@ -66,15 +66,12 @@ module "cdn" {
   }
 
   # Дополнительные настройки
-  custom_server_name = "*.example.com" # Wildcard CNAME
-  ignore_cookie      = false           # Учитывать cookies в кэше
-  rewrite_flag       = "BREAK"         # Поведение при перезаписи URL
+  custom_server_name = "*.example.com"     # Wildcard CNAME
+  ignore_cookie      = false               # Учитывать cookies в кэше
+  rewrite_flag       = "BREAK"             # Поведение при перезаписи URL
   rewrite_pattern    = "/old/(.*) /new/$1" # Шаблон перезаписи URL
 
   ip_address_acl_policy_type = "allow"
-
-  # Использование имени группы origin вместо ID
-  origin_group_name = "my-cdn-origin-group"
 
   origin_group_origins = {
     "main" = {
@@ -83,11 +80,11 @@ module "cdn" {
       backup  = false
     }
     "backup" = {
-      source  = "backup.example.com:80"
-      backup  = true
+      source = "backup.example.com:80"
+      backup = true
     }
   }
 
   # Дополнительные настройки сжатия
-  slice = true  # Включить частичную загрузку файлов >10MB
+  slice = true # Включить частичную загрузку файлов >10MB
 }

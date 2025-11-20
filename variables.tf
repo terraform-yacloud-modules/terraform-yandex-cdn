@@ -406,11 +406,6 @@ variable "rewrite_flag" {
   EOF
   type        = string
   default     = null
-
-  validation {
-    condition     = contains(["LAST", "BREAK", "REDIRECT", "PERMANENT"], var.rewrite_flag)
-    error_message = "rewrite_flag must be one of: LAST, BREAK, REDIRECT, PERMANENT"
-  }
 }
 
 variable "rewrite_pattern" {
@@ -419,12 +414,6 @@ variable "rewrite_pattern" {
     `<source path> <destination path>`, where both paths are regular expressions which use at least one group.
     Example: `/foo/(.*) /bar/$1`
   EOF
-  type        = string
-  default     = null
-}
-
-variable "origin_group_name" {
-  description = "The name of a specific origin group (alternative to origin_group_id)"
   type        = string
   default     = null
 }
