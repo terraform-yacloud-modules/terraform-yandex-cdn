@@ -389,6 +389,46 @@ variable "origin_group_use_next" {
   default     = true
 }
 
+variable "shielding" {
+  description = "ID of the shielding location for CDN protection"
+  type        = string
+  default     = null
+}
+
+variable "rewrite_flag" {
+  description = <<EOF
+    Defines flag for the Rewrite option (default: `BREAK`).
+    Possible values:
+    - `LAST` - Stops processing of the current set of ngx_http_rewrite_module directives and starts a search for a new location matching changed URI.
+    - `BREAK` - Stops processing of the current set of the Rewrite option.
+    - `REDIRECT` - Returns a temporary redirect with the 302 code
+    - `PERMANENT` - Returns a permanent redirect with the 301 code
+  EOF
+  type        = string
+  default     = null
+
+  validation {
+    condition     = contains(["LAST", "BREAK", "REDIRECT", "PERMANENT"], var.rewrite_flag)
+    error_message = "rewrite_flag must be one of: LAST, BREAK, REDIRECT, PERMANENT"
+  }
+}
+
+variable "rewrite_pattern" {
+  description = <<EOF
+    An option for changing or redirecting query paths. The value must have the following format:
+    `<source path> <destination path>`, where both paths are regular expressions which use at least one group.
+    Example: `/foo/(.*) /bar/$1`
+  EOF
+  type        = string
+  default     = null
+}
+
+variable "origin_group_name" {
+  description = "The name of a specific origin group (alternative to origin_group_id)"
+  type        = string
+  default     = null
+}
+
 variable "origin_group_origins" {
   description = <<EOF
     A map of objects representing the origins for the CDN origin group. Each object contains the following fields:
