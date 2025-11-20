@@ -18,6 +18,8 @@ resource "yandex_cdn_resource" "main" {
   cname               = var.cname
   secondary_hostnames = var.secondary_hostnames
   active              = var.active
+  shielding           = var.shielding
+  labels              = var.labels
 
   provider_type = var.provider_type
 
@@ -61,6 +63,8 @@ resource "yandex_cdn_resource" "main" {
     ignore_cookie              = var.ignore_cookie
     secure_key                 = var.secure_key
     enable_ip_url_signing      = var.secure_key != null ? var.enable_ip_url_signing : null
+    rewrite_flag               = var.rewrite_flag
+    rewrite_pattern            = var.rewrite_pattern
 
     dynamic "ip_address_acl" {
       for_each = var.ip_address_enabled ? [1] : []
