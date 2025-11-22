@@ -1,41 +1,71 @@
 module "cdn" {
   source = "../../"
 
-  cname                  = "cdn.test-yandex.example.ru"
-  secondary_hostnames    = []
-  active                 = true
-  origin_protocol        = "http"
-  disable_cache          = true
-  edge_cache_settings    = "0"
-  browser_cache_settings = "0"
-  cache_http_headers     = []
-  ignore_query_params    = false
-  query_params_whitelist = []
-  query_params_blacklist = []
+  cname = "cdn2.test-yandex.example.ru"
+  secondary_hostnames = [
+    "assets.test-yandex.example.ru",
+    "static.test-yandex.example.ru"
+  ]
+  active        = true
+  provider_type = "ourcdn"
+  shielding     = "1"
+
+  labels = {
+    environment = "production"
+    service     = "cdn"
+  }
+
+  origin_protocol = "http"
+
+  disable_cache          = false
+  edge_cache_settings    = "86400"
+  browser_cache_settings = "3600"
+  cache_http_headers = [
+    "Content-Type",
+    "Cache-Control",
+    "ETag"
+  ]
+
+  ignore_query_params = false
+  query_params_whitelist = [
+    "utm_source",
+    "utm_medium",
+    "version"
+  ]
+  query_params_blacklist = [
+    "session_id",
+    "user_token"
+  ]
   slice                  = false
   fetched_compressed     = false
   gzip_on                = true
-  redirect_http_to_https = false
+  redirect_http_to_https = true
   redirect_https_to_http = false
-  custom_host_header     = null
-  forward_host_header    = false
-  cors                   = ["*"]
+
+  custom_host_header  = "origin.example.com"
+  forward_host_header = false
+  cors                = ["*"]
+
   allowed_http_methods = [
     "GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
   ]
   proxy_cache_methods_set    = true
   disable_proxy_force_ranges = false
+
   static_request_headers = {
-    is-from-cdn = "yes"
+    "X-Forwarded-Proto" = "https"
+    "X-CDN-Provider"    = "yandex"
   }
   static_response_headers = {
-    is-cdn = "yes"
+    "X-Content-Source" = "yandex-cdn"
+    "X-Cache-Status"   = "HIT"
   }
-  custom_server_name             = null
-  ignore_cookie                  = false
-  secure_key                     = null
-  enable_ip_url_signing          = false
-  ip_address_enabled             = false
+  custom_server_name    = "*.example.com"
+  ignore_cookie         = false
+  secure_key            = null
+  enable_ip_url_signing = false
+  ip_address_enabled    = false
+
   ip_address_acl_excepted_values = []
   ip_address_acl_policy_type     = "allow"
   origin_group_use_next          = true
@@ -44,6 +74,10 @@ module "cdn" {
       enabled = true
       source  = "example.com:80"
       backup  = false
+    }
+    "backup" = {
+      source = "backup.example.com:80"
+      backup = true
     }
   }
 

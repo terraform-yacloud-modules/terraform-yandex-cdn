@@ -8,7 +8,7 @@ module "cdn" {
   ]
   active        = true
   provider_type = "ourcdn"
-  shielding = "1"
+  shielding     = "1"
 
   labels = {
     environment = "production"
@@ -36,14 +36,18 @@ module "cdn" {
     "session_id",
     "user_token"
   ]
-
+  fetched_compressed     = false
+  gzip_on                = true
   redirect_http_to_https = true
   redirect_https_to_http = false
 
   custom_host_header  = "origin.example.com"
   forward_host_header = false
+  cors                = ["*"]
 
-  allowed_http_methods       = ["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"]
+  allowed_http_methods = [
+    "GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
+  ]
   proxy_cache_methods_set    = true
   disable_proxy_force_ranges = false
 
@@ -51,7 +55,6 @@ module "cdn" {
     "X-Forwarded-Proto" = "https"
     "X-CDN-Provider"    = "yandex"
   }
-
   static_response_headers = {
     "X-Content-Source" = "yandex-cdn"
     "X-Cache-Status"   = "HIT"
@@ -62,8 +65,10 @@ module "cdn" {
   rewrite_flag       = "BREAK"
   rewrite_pattern    = "/old/(.*) /new/$1"
 
-  ip_address_acl_policy_type = "allow"
+  ip_address_acl_excepted_values = []
+  ip_address_acl_policy_type     = "allow"
 
+  origin_group_use_next = true
   origin_group_origins = {
     "main" = {
       enabled = true
