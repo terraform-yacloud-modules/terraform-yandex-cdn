@@ -8,28 +8,24 @@ module "cdn" {
   ]
   active        = true
   provider_type = "ourcdn"
-  # Защита CDN
-  shielding = "1" # ID локации для защиты (опционально)
+  shielding = "1"
 
   labels = {
     environment = "production"
     service     = "cdn"
   }
 
-  # Протокол для origin серверов
   origin_protocol = "http"
 
-  # Настройки кэширования
   disable_cache          = false
-  edge_cache_settings    = "86400" # 24 часа в секундах
-  browser_cache_settings = "3600"  # 1 час в секундах
+  edge_cache_settings    = "86400"
+  browser_cache_settings = "3600"
   cache_http_headers = [
     "Content-Type",
     "Cache-Control",
     "ETag"
   ]
 
-  # Параметры запросов
   ignore_query_params = false
   query_params_whitelist = [
     "utm_source",
@@ -41,20 +37,16 @@ module "cdn" {
     "user_token"
   ]
 
-  # HTTPS редиректы
   redirect_http_to_https = true
   redirect_https_to_http = false
 
-  # Заголовки
   custom_host_header  = "origin.example.com"
-  forward_host_header = false # Пересылать оригинальный Host заголовок
+  forward_host_header = false
 
-  # HTTP методы
   allowed_http_methods       = ["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"]
   proxy_cache_methods_set    = true
   disable_proxy_force_ranges = false
 
-  # Кастомные заголовки
   static_request_headers = {
     "X-Forwarded-Proto" = "https"
     "X-CDN-Provider"    = "yandex"
@@ -65,11 +57,10 @@ module "cdn" {
     "X-Cache-Status"   = "HIT"
   }
 
-  # Дополнительные настройки
-  custom_server_name = "*.example.com"     # Wildcard CNAME
-  ignore_cookie      = false               # Учитывать cookies в кэше
-  rewrite_flag       = "BREAK"             # Поведение при перезаписи URL
-  rewrite_pattern    = "/old/(.*) /new/$1" # Шаблон перезаписи URL
+  custom_server_name = "*.example.com"
+  ignore_cookie      = false
+  rewrite_flag       = "BREAK"
+  rewrite_pattern    = "/old/(.*) /new/$1"
 
   ip_address_acl_policy_type = "allow"
 
@@ -85,6 +76,5 @@ module "cdn" {
     }
   }
 
-  # Дополнительные настройки сжатия
-  slice = true # Включить частичную загрузку файлов >10MB
+  slice = true
 }
