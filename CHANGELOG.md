@@ -1,3 +1,8 @@
+## v2.31.0 - 2026-02-24
+### Miscellaneous
+- fde3b4c Merge pull request [#93](https://github.com/terraform-yacloud-modules/terraform-yandex-cdn/pull/93) from terraform-yacloud-modules/dependabot/github_actions/kvendingoldo/git-flow-action-2.16.0
+- d555024 build(deps): bump kvendingoldo/git-flow-action from 2.2.0 to 2.16.0
+
 ## v2.30.0
 ## v2.29.0
 ## v2.28.0
