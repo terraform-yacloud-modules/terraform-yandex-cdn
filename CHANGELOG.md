@@ -1,3 +1,8 @@
+## v2.32.0 - 2026-03-02
+### Miscellaneous
+- 3415273 Merge pull request [#94](https://github.com/terraform-yacloud-modules/terraform-yandex-cdn/pull/94) from terraform-yacloud-modules/dependabot/github_actions/hashicorp/setup-terraform-4
+- 255e1a7 build(deps): bump hashicorp/setup-terraform from 3 to 4
+
 ## v2.31.0 - 2026-02-24
 ### Miscellaneous
 - fde3b4c Merge pull request [#93](https://github.com/terraform-yacloud-modules/terraform-yandex-cdn/pull/93) from terraform-yacloud-modules/dependabot/github_actions/kvendingoldo/git-flow-action-2.16.0
