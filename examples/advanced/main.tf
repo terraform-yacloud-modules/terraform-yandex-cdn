@@ -20,6 +20,10 @@ module "cdn" {
   disable_cache          = false
   edge_cache_settings    = "86400"
   browser_cache_settings = "3600"
+  # Cache by response codes (values passed as strings, converted to number in module)
+  edge_cache_settings_codes_enabled = true
+  edge_cache_settings_value         = "86400"
+  edge_cache_settings_custom_values = { "404" = "60", "502" = "120" }
   cache_http_headers = [
     "Content-Type",
     "Cache-Control",
@@ -46,7 +50,7 @@ module "cdn" {
   cors                = ["*"]
 
   allowed_http_methods = [
-    "GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
+    "GET", "HEAD", "PUT", "PATCH", "DELETE", "OPTIONS"
   ]
   proxy_cache_methods_set    = true
   disable_proxy_force_ranges = false
@@ -60,22 +64,21 @@ module "cdn" {
     "X-Cache-Status"   = "HIT"
   }
 
-  custom_server_name = "*.example.com"
-  ignore_cookie      = false
-  rewrite_flag       = "BREAK"
-  rewrite_pattern    = "/old/(.*) /new/$1"
+  ignore_cookie   = false
+  rewrite_flag    = "BREAK"
+  rewrite_pattern = "/old/(.*) /new/$1"
 
   ip_address_acl_excepted_values = []
   ip_address_acl_policy_type     = "allow"
 
   origin_group_use_next = true
   origin_group_origins = {
-    "main" = {
+    main = {
       enabled = true
       source  = "example.com:80"
       backup  = false
     }
-    "backup" = {
+    backup = {
       source = "backup.example.com:80"
       backup = true
     }
