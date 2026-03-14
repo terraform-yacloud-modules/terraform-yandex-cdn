@@ -17,9 +17,12 @@ module "cdn" {
 
   origin_protocol = "http"
 
-  disable_cache          = false
-  edge_cache_settings    = "86400"
-  browser_cache_settings = "3600"
+  disable_cache                     = false
+  edge_cache_settings               = "86400"
+  browser_cache_settings            = "3600"
+  edge_cache_settings_codes_enabled = false
+  edge_cache_settings_value         = "345600"
+  edge_cache_settings_custom_values = {}
   cache_http_headers = [
     "Content-Type",
     "Cache-Control",
@@ -47,7 +50,7 @@ module "cdn" {
   cors                = ["*"]
 
   allowed_http_methods = [
-    "GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
+    "GET", "HEAD", "PUT", "PATCH", "DELETE", "OPTIONS"
   ]
   proxy_cache_methods_set    = true
   disable_proxy_force_ranges = false
@@ -60,7 +63,6 @@ module "cdn" {
     "X-Content-Source" = "yandex-cdn"
     "X-Cache-Status"   = "HIT"
   }
-  custom_server_name    = "*.example.com"
   ignore_cookie         = false
   secure_key            = null
   enable_ip_url_signing = false
@@ -70,12 +72,12 @@ module "cdn" {
   ip_address_acl_policy_type     = "allow"
   origin_group_use_next          = true
   origin_group_origins = {
-    "main" = {
+    main = {
       enabled = true
       source  = "example.com:80"
       backup  = false
     }
-    "backup" = {
+    backup = {
       source = "backup.example.com:80"
       backup = true
     }
