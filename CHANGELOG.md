@@ -1,3 +1,7 @@
+## v2.33.0 - 2026-03-15
+### Miscellaneous
+- 7dffd88 Drop POST from allowed_http_methods to fix CDN creation error ([#95](https://github.com/terraform-yacloud-modules/terraform-yandex-cdn/pull/95))
+
 ## v2.32.0 - 2026-03-02
 ### Miscellaneous
 - 3415273 Merge pull request [#94](https://github.com/terraform-yacloud-modules/terraform-yandex-cdn/pull/94) from terraform-yacloud-modules/dependabot/github_actions/hashicorp/setup-terraform-4
