@@ -257,12 +257,12 @@ variable "cors" {
 variable "allowed_http_methods" {
   description = <<EOF
     HTTP methods for your CDN content.
-    By default the following methods are allowed: GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS.
+    By default the following methods are allowed: GET, HEAD, PUT, PATCH, DELETE, OPTIONS.
     In case some methods are not allowed to the user, they will get the 405 (Method Not Allowed) response.
     If the method is not supported, the user gets the 501 (Not Implemented) response.
   EOF
   type        = list(string)
-  default     = ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+  default     = ["GET", "HEAD", "PUT", "PATCH", "DELETE", "OPTIONS"]
 }
 
 variable "proxy_cache_methods_set" {
@@ -291,16 +291,6 @@ variable "static_response_headers" {
   default     = {}
 }
 
-variable "custom_server_name" {
-  description = <<EOF
-    Wildcard additional CNAME.
-    If a resource has a wildcard additional CNAME,
-    you can use your own certificate for content delivery via HTTPS.
-    Read-only.
-  EOF
-  type        = string
-  default     = null
-}
 
 variable "ignore_cookie" {
   description = "Set for ignoring cookie."
@@ -444,6 +434,11 @@ variable "origin_group_origins" {
     backup  = optional(bool, false)
   }))
   default = {}
+
+  validation {
+    condition     = length(var.origin_group_origins) >= 1
+    error_message = "At least one origin is required in origin_group_origins."
+  }
 
   validation {
     condition = alltrue([

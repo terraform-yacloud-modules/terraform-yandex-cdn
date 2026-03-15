@@ -30,21 +30,22 @@ resource "yandex_cdn_resource" "main" {
 
   options {
     disable_cache       = var.disable_cache
-    edge_cache_settings = var.edge_cache_settings > 0 && !var.edge_cache_settings_codes_enabled ? var.edge_cache_settings : null
+    edge_cache_settings = tonumber(var.edge_cache_settings) > 0 && !var.edge_cache_settings_codes_enabled ? tonumber(var.edge_cache_settings) : null
 
     dynamic "edge_cache_settings_codes" {
       for_each = var.edge_cache_settings_codes_enabled ? [1] : []
       content {
-        custom_values = var.edge_cache_settings_custom_values
-        value         = var.edge_cache_settings_value
+        custom_values = length(var.edge_cache_settings_custom_values) > 0 ? { for k, v in var.edge_cache_settings_custom_values : k => tonumber(v) } : null
+        value         = tonumber(var.edge_cache_settings_value)
       }
     }
 
-    browser_cache_settings     = var.browser_cache_settings > 0 ? var.browser_cache_settings : null
-    cache_http_headers         = var.cache_http_headers
-    ignore_query_params        = var.ignore_query_params
-    query_params_whitelist     = var.query_params_whitelist
-    query_params_blacklist     = var.query_params_blacklist
+    browser_cache_settings = tonumber(var.browser_cache_settings) > 0 ? tonumber(var.browser_cache_settings) : null
+    cache_http_headers     = var.cache_http_headers
+    # Provider allows only one of: ignore_query_params, query_params_whitelist, or query_params_blacklist (whitelist takes precedence if both set)
+    ignore_query_params        = length(var.query_params_whitelist) == 0 && length(var.query_params_blacklist) == 0 ? var.ignore_query_params : null
+    query_params_whitelist     = length(var.query_params_whitelist) > 0 ? var.query_params_whitelist : null
+    query_params_blacklist     = length(var.query_params_whitelist) == 0 && length(var.query_params_blacklist) > 0 ? var.query_params_blacklist : null
     slice                      = var.slice
     stale                      = var.stale
     fetched_compressed         = var.fetched_compressed
@@ -59,12 +60,12 @@ resource "yandex_cdn_resource" "main" {
     disable_proxy_force_ranges = var.disable_proxy_force_ranges
     static_request_headers     = var.static_request_headers
     static_response_headers    = var.static_response_headers
-    custom_server_name         = var.custom_server_name
-    ignore_cookie              = var.ignore_cookie
-    secure_key                 = var.secure_key
-    enable_ip_url_signing      = var.secure_key != null ? var.enable_ip_url_signing : null
-    rewrite_flag               = var.rewrite_flag
-    rewrite_pattern            = var.rewrite_pattern
+    # custom_server_name not set at creation; API CustomSNI requires pattern matching cname and is often read-only
+    ignore_cookie         = var.ignore_cookie
+    secure_key            = var.secure_key
+    enable_ip_url_signing = var.secure_key != null ? var.enable_ip_url_signing : null
+    rewrite_flag          = var.rewrite_flag
+    rewrite_pattern       = var.rewrite_pattern
 
     dynamic "ip_address_acl" {
       for_each = var.ip_address_enabled ? [1] : []

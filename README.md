@@ -1,6 +1,10 @@
 # Yandex Cloud CDN Terraform module
 
-Terraform module which creates Yandex Cloud CDN resources. To get more information about Yandex Cloud CDN, use the following [docs](https://github.com/yandex-cloud/docs/tree/master/ru/cdn).
+Terraform module which creates Yandex Cloud CDN resources.
+
+- [Terraform: yandex_cdn_origin_group](https://yandex.cloud/ru/docs/terraform/resources/cdn_origin_group)
+- [Terraform: yandex_cdn_resource](https://yandex.cloud/ru/docs/terraform/resources/cdn_resource)
+- [Yandex Cloud CDN docs](https://github.com/yandex-cloud/docs/tree/master/ru/cdn)
 
 ## Examples
 
@@ -44,7 +48,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_active"></a> [active](#input\_active) | End user access to content is indicated by the following flag:<br/>    true - indicates that CDN content is available to clients;<br/>    false - indicates that content access is disabled. | `bool` | `true` | no |
-| <a name="input_allowed_http_methods"></a> [allowed\_http\_methods](#input\_allowed\_http\_methods) | HTTP methods for your CDN content.<br/>    By default the following methods are allowed: GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS.<br/>    In case some methods are not allowed to the user, they will get the 405 (Method Not Allowed) response.<br/>    If the method is not supported, the user gets the 501 (Not Implemented) response. | `list(string)` | <pre>[<br/>  "GET",<br/>  "HEAD",<br/>  "POST",<br/>  "PUT",<br/>  "PATCH",<br/>  "DELETE",<br/>  "OPTIONS"<br/>]</pre> | no |
+| <a name="input_allowed_http_methods"></a> [allowed\_http\_methods](#input\_allowed\_http\_methods) | HTTP methods for your CDN content.<br/>    By default the following methods are allowed: GET, HEAD, PUT, PATCH, DELETE, OPTIONS.<br/>    In case some methods are not allowed to the user, they will get the 405 (Method Not Allowed) response.<br/>    If the method is not supported, the user gets the 501 (Not Implemented) response. | `list(string)` | <pre>[<br/>  "GET",<br/>  "HEAD",<br/>  "PUT",<br/>  "PATCH",<br/>  "DELETE",<br/>  "OPTIONS"<br/>]</pre> | no |
 | <a name="input_browser_cache_settings"></a> [browser\_cache\_settings](#input\_browser\_cache\_settings) | Set up a cache period for the end-users browser.<br/>    Content will be cached due to origin settings.<br/>    If there are no cache settings on your origin,<br/>    the content will not be cached.<br/>    The list of HTTP response codes that can be cached in browsers:<br/>    200, 201, 204, 206, 301, 302, 303, 304, 307, 308.<br/>    Other response codes will not be cached.<br/>    The default value is 0. | `string` | `"0"` | no |
 | <a name="input_cache_http_headers"></a> [cache\_http\_headers](#input\_cache\_http\_headers) | List of HTTP headers that must be included in responses to clients. | `list(string)` | `[]` | no |
 | <a name="input_cdn_ssl_certificate_id"></a> [cdn\_ssl\_certificate\_id](#input\_cdn\_ssl\_certificate\_id) | ID of user certificate in Yandex Certificate Manager. | `string` | `null` | no |
@@ -53,7 +57,6 @@ No modules.
 | <a name="input_cname"></a> [cname](#input\_cname) | Primary domain name for content distribution. | `string` | n/a | yes |
 | <a name="input_cors"></a> [cors](#input\_cors) | Parameter that lets browsers get access to selected resources<br/>    from a domain different to a domain from which the request is received. | `list(string)` | <pre>[<br/>  "*"<br/>]</pre> | no |
 | <a name="input_custom_host_header"></a> [custom\_host\_header](#input\_custom\_host\_header) | Custom value for the Host header.<br/>    Your server must be able to process requests with the chosen header.<br/>    E.g.: "ycprojektblue-storage.storage.yandexcloud.net" | `string` | `null` | no |
-| <a name="input_custom_server_name"></a> [custom\_server\_name](#input\_custom\_server\_name) | Wildcard additional CNAME.<br/>    If a resource has a wildcard additional CNAME,<br/>    you can use your own certificate for content delivery via HTTPS.<br/>    Read-only. | `string` | `null` | no |
 | <a name="input_disable_cache"></a> [disable\_cache](#input\_disable\_cache) | Setup a cache status. | `bool` | `false` | no |
 | <a name="input_disable_proxy_force_ranges"></a> [disable\_proxy\_force\_ranges](#input\_disable\_proxy\_force\_ranges) | Disabling proxy force ranges. | `bool` | `false` | no |
 | <a name="input_dns_zone_id"></a> [dns\_zone\_id](#input\_dns\_zone\_id) | ID of Yandex DNS zone, where certificate manager records will be created. | `string` | `null` | no |
