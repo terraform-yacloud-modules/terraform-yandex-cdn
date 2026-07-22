@@ -17,7 +17,6 @@ module "cdn" {
 
   origin_protocol = "http"
 
-  disable_cache          = false
   edge_cache_settings    = "86400"
   browser_cache_settings = "3600"
   # Cache by response codes (values passed as strings, converted to number in module)
@@ -30,16 +29,16 @@ module "cdn" {
     "ETag"
   ]
 
-  ignore_query_params = false
+  # Only ONE of ignore_query_params, query_params_whitelist, or query_params_blacklist can be used
+  # Using whitelist to cache only specific query parameters as different objects
   query_params_whitelist = [
     "utm_source",
     "utm_medium",
     "version"
   ]
-  query_params_blacklist = [
-    "session_id",
-    "user_token"
-  ]
+  # query_params_blacklist and ignore_query_params are mutually exclusive with whitelist
+  # query_params_blacklist = ["session_id", "user_token"]  # Example: ignore only these params
+  # ignore_query_params = true  # Example: ignore all query params
   fetched_compressed     = false
   gzip_on                = true
   redirect_http_to_https = true

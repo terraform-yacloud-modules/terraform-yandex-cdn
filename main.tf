@@ -29,7 +29,6 @@ resource "yandex_cdn_resource" "main" {
   folder_id = local.folder_id
 
   options {
-    disable_cache       = var.disable_cache
     edge_cache_settings = tonumber(var.edge_cache_settings) > 0 && !var.edge_cache_settings_codes_enabled ? tonumber(var.edge_cache_settings) : null
 
     dynamic "edge_cache_settings_codes" {
@@ -42,10 +41,11 @@ resource "yandex_cdn_resource" "main" {
 
     browser_cache_settings = tonumber(var.browser_cache_settings) > 0 ? tonumber(var.browser_cache_settings) : null
     cache_http_headers     = var.cache_http_headers
-    # Provider allows only one of: ignore_query_params, query_params_whitelist, or query_params_blacklist (whitelist takes precedence if both set)
-    ignore_query_params        = length(var.query_params_whitelist) == 0 && length(var.query_params_blacklist) == 0 ? var.ignore_query_params : null
-    query_params_whitelist     = length(var.query_params_whitelist) > 0 ? var.query_params_whitelist : null
-    query_params_blacklist     = length(var.query_params_whitelist) == 0 && length(var.query_params_blacklist) > 0 ? var.query_params_blacklist : null
+    # API constraint: Only ONE of ignore_query_params, query_params_whitelist, or query_params_blacklist can be set
+    # Priority: whitelist > blacklist > ignore_query_params
+    ignore_query_params    = length(var.query_params_whitelist) == 0 && length(var.query_params_blacklist) == 0 && var.ignore_query_params ? true : null
+    query_params_whitelist = length(var.query_params_whitelist) > 0 ? var.query_params_whitelist : null
+    query_params_blacklist = length(var.query_params_whitelist) == 0 && length(var.query_params_blacklist) > 0 ? var.query_params_blacklist : null
     slice                      = var.slice
     stale                      = var.stale
     fetched_compressed         = var.fetched_compressed

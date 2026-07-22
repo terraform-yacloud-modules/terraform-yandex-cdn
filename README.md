@@ -6,6 +6,20 @@ Terraform module which creates Yandex Cloud CDN resources.
 - [Terraform: yandex_cdn_resource](https://yandex.cloud/ru/docs/terraform/resources/cdn_resource)
 - [Yandex Cloud CDN docs](https://github.com/yandex-cloud/docs/tree/master/ru/cdn)
 
+## Important Notes
+
+### Query Parameters Caching
+
+**Only ONE** of the following query parameter options can be used at a time (API constraint):
+- `ignore_query_params` - Ignore all query parameters (cache all URLs with different params as the same object)
+- `query_params_whitelist` - Cache only specified query parameters as different objects (takes precedence)
+- `query_params_blacklist` - Ignore only specified query parameters
+
+If multiple options are provided, the module will automatically select one based on this priority:
+1. `query_params_whitelist` (if not empty)
+2. `query_params_blacklist` (if not empty and whitelist is empty)
+3. `ignore_query_params` (if both lists are empty and set to true)
+
 ## Examples
 
 Examples codified under
@@ -57,7 +71,6 @@ No modules.
 | <a name="input_cname"></a> [cname](#input\_cname) | Primary domain name for content distribution. | `string` | n/a | yes |
 | <a name="input_cors"></a> [cors](#input\_cors) | Parameter that lets browsers get access to selected resources<br/>    from a domain different to a domain from which the request is received. | `list(string)` | <pre>[<br/>  "*"<br/>]</pre> | no |
 | <a name="input_custom_host_header"></a> [custom\_host\_header](#input\_custom\_host\_header) | Custom value for the Host header.<br/>    Your server must be able to process requests with the chosen header.<br/>    E.g.: "ycprojektblue-storage.storage.yandexcloud.net" | `string` | `null` | no |
-| <a name="input_disable_cache"></a> [disable\_cache](#input\_disable\_cache) | Setup a cache status. | `bool` | `false` | no |
 | <a name="input_disable_proxy_force_ranges"></a> [disable\_proxy\_force\_ranges](#input\_disable\_proxy\_force\_ranges) | Disabling proxy force ranges. | `bool` | `false` | no |
 | <a name="input_dns_zone_id"></a> [dns\_zone\_id](#input\_dns\_zone\_id) | ID of Yandex DNS zone, where certificate manager records will be created. | `string` | `null` | no |
 | <a name="input_edge_cache_settings"></a> [edge\_cache\_settings](#input\_edge\_cache\_settings) | Content will be cached according to origin cache settings.<br/>    The value applies for a response with codes 200, 201, 204, 206, 301, 302, 303, 304, 307, 308<br/>    if an origin server does not have caching HTTP headers.<br/>    Responses with other codes will not be cached.<br/>    The default value is 345600. | `string` | `"345600"` | no |

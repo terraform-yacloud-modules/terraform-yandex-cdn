@@ -81,12 +81,6 @@ variable "origin_protocol" {
 #
 # Options
 #
-variable "disable_cache" {
-  description = "Setup a cache status."
-  type        = bool
-  default     = false
-}
-
 variable "edge_cache_settings" {
   description = <<EOF
     Content will be cached according to origin cache settings.
@@ -149,7 +143,9 @@ variable "cache_http_headers" {
 variable "ignore_query_params" {
   description = <<EOF
     Files with different query parameters are cached as objects with the same key
-    regardless of the parameter value. Selected by default.
+    regardless of the parameter value.
+    Note: Only ONE of ignore_query_params, query_params_whitelist, or query_params_blacklist can be used.
+    If query_params_whitelist or query_params_blacklist are set, this parameter will be ignored.
   EOF
   type        = bool
   default     = false
@@ -159,15 +155,24 @@ variable "query_params_whitelist" {
   description = <<EOF
     Files with the specified query parameters are cached as objects with different keys,
     files with other parameters are cached as objects with the same key.
+    Note: Only ONE of ignore_query_params, query_params_whitelist, or query_params_blacklist can be used.
+    This option takes precedence over query_params_blacklist and ignore_query_params.
   EOF
   type        = list(string)
   default     = []
+
+  validation {
+    condition     = !(length(var.query_params_whitelist) > 0 && length(var.query_params_blacklist) > 0)
+    error_message = "Cannot use both query_params_whitelist and query_params_blacklist. Only one query params option can be used at a time."
+  }
 }
 
 variable "query_params_blacklist" {
   description = <<EOF
     Files with the specified query parameters are cached as objects with the same key,
     files with other parameters are cached as objects with different keys.
+    Note: Only ONE of ignore_query_params, query_params_whitelist, or query_params_blacklist can be used.
+    If query_params_whitelist is set, this parameter will be ignored.
   EOF
   type        = list(string)
   default     = []
