@@ -1,3 +1,10 @@
+## v2.34.0 - 2026-07-22
+### Bug Fixes
+- cdd6f47 fix: module argument conflicts
+
+### Chores
+- 1c375bc chore: delete deprecated args
+
 ## v2.33.0 - 2026-03-15
 ### Miscellaneous
 - 7dffd88 Drop POST from allowed_http_methods to fix CDN creation error ([#95](https://github.com/terraform-yacloud-modules/terraform-yandex-cdn/pull/95))
