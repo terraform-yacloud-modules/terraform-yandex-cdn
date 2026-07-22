@@ -42,7 +42,7 @@ resource "yandex_cdn_resource" "main" {
     browser_cache_settings = tonumber(var.browser_cache_settings) > 0 ? tonumber(var.browser_cache_settings) : null
     # API constraint: Only ONE of ignore_query_params, query_params_whitelist, or query_params_blacklist can be set
     # Priority: whitelist > blacklist > ignore_query_params
-    ignore_query_params        = length(var.query_params_whitelist) == 0 && length(var.query_params_blacklist) == 0 && var.ignore_query_params ? true : null
+    ignore_query_params        = length(var.query_params_whitelist) == 0 && length(var.query_params_blacklist) == 0 ? var.ignore_query_params : null
     query_params_whitelist     = length(var.query_params_whitelist) > 0 ? var.query_params_whitelist : null
     query_params_blacklist     = length(var.query_params_whitelist) == 0 && length(var.query_params_blacklist) > 0 ? var.query_params_blacklist : null
     slice                      = var.slice
