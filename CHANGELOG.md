@@ -1,3 +1,7 @@
+## v2.35.0 - 2026-07-22
+### Features
+- 0daf5a5 feat: add custom_server_name
+
 ## v2.34.0 - 2026-07-22
 ### Bug Fixes
 - cdd6f47 fix: module argument conflicts
