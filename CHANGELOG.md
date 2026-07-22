@@ -1,3 +1,7 @@
+## v2.36.0 - 2026-07-22
+### Bug Fixes
+- 7de34c7 fix: ignore_query_params
+
 ## v2.35.0 - 2026-07-22
 ### Features
 - 0daf5a5 feat: add custom_server_name
