@@ -22,11 +22,6 @@ module "cdn" {
   edge_cache_settings_codes_enabled = false
   edge_cache_settings_value         = "345600"
   edge_cache_settings_custom_values = {}
-  cache_http_headers = [
-    "Content-Type",
-    "Cache-Control",
-    "ETag"
-  ]
 
   # Only ONE of ignore_query_params, query_params_whitelist, or query_params_blacklist can be used
   # Using whitelist to cache only specific query parameters as different objects

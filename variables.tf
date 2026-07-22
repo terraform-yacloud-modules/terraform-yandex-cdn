@@ -134,12 +134,6 @@ variable "browser_cache_settings" {
   }
 }
 
-variable "cache_http_headers" {
-  description = "List of HTTP headers that must be included in responses to clients."
-  type        = list(string)
-  default     = []
-}
-
 variable "ignore_query_params" {
   description = <<EOF
     Files with different query parameters are cached as objects with the same key
