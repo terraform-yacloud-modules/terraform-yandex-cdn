@@ -59,12 +59,12 @@ resource "yandex_cdn_resource" "main" {
     disable_proxy_force_ranges = var.disable_proxy_force_ranges
     static_request_headers     = var.static_request_headers
     static_response_headers    = var.static_response_headers
-    # custom_server_name not set at creation; API CustomSNI requires pattern matching cname and is often read-only
-    ignore_cookie         = var.ignore_cookie
-    secure_key            = var.secure_key
-    enable_ip_url_signing = var.secure_key != null ? var.enable_ip_url_signing : null
-    rewrite_flag          = var.rewrite_flag
-    rewrite_pattern       = var.rewrite_pattern
+    custom_server_name         = var.custom_server_name
+    ignore_cookie              = var.ignore_cookie
+    secure_key                 = var.secure_key
+    enable_ip_url_signing      = var.secure_key != null ? var.enable_ip_url_signing : null
+    rewrite_flag               = var.rewrite_flag
+    rewrite_pattern            = var.rewrite_pattern
 
     dynamic "ip_address_acl" {
       for_each = var.ip_address_enabled ? [1] : []

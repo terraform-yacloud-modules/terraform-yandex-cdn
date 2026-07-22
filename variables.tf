@@ -290,6 +290,14 @@ variable "static_response_headers" {
   default     = {}
 }
 
+variable "custom_server_name" {
+  description = <<EOF
+    Wildcard additional CNAME. If a resource has a wildcard additional CNAME,
+    you can use your own certificate for content delivery via HTTPS.
+  EOF
+  type        = string
+  default     = null
+}
 
 variable "ignore_cookie" {
   description = "Set for ignoring cookie."
