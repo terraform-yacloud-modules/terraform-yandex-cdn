@@ -1,3 +1,8 @@
+## v2.38.0 - 2026-09-01
+### Miscellaneous
+- b6d5f99 Merge pull request [#99](https://github.com/terraform-yacloud-modules/terraform-yandex-cdn/pull/99) from terraform-yacloud-modules/dependabot/github_actions/actions/checkout-7
+- d7b0517 build(deps): bump actions/checkout from 6 to 7
+
 ## v2.37.0 - 2026-09-01
 ### Miscellaneous
 - cef6a1a build(deps): bump actions/cache from 5.0.3 to 6.1.0 ([#98](https://github.com/terraform-yacloud-modules/terraform-yandex-cdn/pull/98))
