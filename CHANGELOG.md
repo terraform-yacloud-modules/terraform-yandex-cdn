@@ -1,3 +1,7 @@
+## v2.37.0 - 2026-09-01
+### Miscellaneous
+- cef6a1a build(deps): bump actions/cache from 5.0.3 to 6.1.0 ([#98](https://github.com/terraform-yacloud-modules/terraform-yandex-cdn/pull/98))
+
 ## v2.36.0 - 2026-07-22
 ### Bug Fixes
 - 7de34c7 fix: ignore_query_params
