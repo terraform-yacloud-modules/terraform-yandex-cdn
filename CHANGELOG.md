@@ -1,3 +1,7 @@
+## v2.39.0 - 2026-11-18
+### Miscellaneous
+- 4c2746e ci: run semver job only on push to main ([#100](https://github.com/terraform-yacloud-modules/terraform-yandex-cdn/pull/100))
+
 ## v2.38.0 - 2026-09-01
 ### Miscellaneous
 - b6d5f99 Merge pull request [#99](https://github.com/terraform-yacloud-modules/terraform-yandex-cdn/pull/99) from terraform-yacloud-modules/dependabot/github_actions/actions/checkout-7
